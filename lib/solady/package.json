@@ -1,0 +1,13 @@
+{
+  "name": "solady",
+  "license": "MIT",
+  "version": "0.0.59",
+  "description": "Optimized Solidity snippets.",
+  "files": [
+    "src/**/*.sol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vectorized/solady.git"
+  }
+}
