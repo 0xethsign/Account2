@@ -25,7 +25,7 @@ contract EBonAbTest is Test {
         bytes memory greet = abi.encode("gm");
         bytes4 select = bytes4(keccak256(abi.encodePacked("gm(string)")));
 
-        ea.execute(address(greeter), bytes.concat(select, greet));
+        ea.executeAsOwner(address(greeter), bytes.concat(select, greet));
 
         // //slither-disable-next-line reentrancy-events,reentrancy-benign
         // greeter.setGreeting("gm gm");
