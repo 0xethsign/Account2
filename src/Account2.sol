@@ -10,7 +10,6 @@ contract Account2 is Owned {
     function executeAsRelay(
         address toCall,
         bytes calldata params,
-        uint256 gasLimit,
         uint256 gasTokenRatio,  // preferably >x, x = gas price in token
         address gasToken) external {
             // (bool success, bytes memory data) = toCall.call(bytes.concat(select, params));
@@ -18,7 +17,6 @@ contract Account2 is Owned {
             (bool success, bytes memory data) = toCall.call(params);
 
             gasUsed -= gasleft() + 21000;
-            require(gasUsed <= gasLimit, 'gas limit exceeded');
 
             uint256 amountToTransfer = (gasUsed * gasTokenRatio);
     }
