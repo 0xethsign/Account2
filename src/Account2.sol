@@ -4,7 +4,7 @@ pragma solidity ^0.8.15;
 import "solmate/auth/Owned.sol";
 import "solmate/auth/Auth.sol";
 
-contract EBonAB is Owned {
+contract Account2 is Owned {
     constructor() Owned(msg.sender) {}
 
     function executeAsRelay(
