@@ -1,38 +1,51 @@
-<img align="right" width="150" height="150" top="100" src="./assets/readme.jpg">
+# Account2
+## Account Abstraction & Economic Abstraction for Ethereum
 
-# femplate • [![ci](https://github.com/abigger87/femplate/actions/workflows/ci.yml/badge.svg)](https://github.com/abigger87/femplate/actions/workflows/ci.yml) ![license](https://img.shields.io/github/license/abigger87/femplate?label=license) ![solidity](https://img.shields.io/badge/solidity-^0.8.15-lightgrey)
+### Overview
+`Account2` is a contract designed to accomplish three key features not yet enshrined in the Ethereum protocol.
 
-A **Clean**, **Robust** Template for Foundry Projects.
+`Account Abstraction` the ability to have an account that will allow a relayer to act on behalf of the account owner as `msg.sender`. This will solve three major UX challenges experienced in the first allowing all transactions to be bundled in a single transaction (i.e.: the necessity for an approve transaction before a swap transaction). Next it will allow a relayer to sponsor the gas for a transaction which is a major UX hurdle for Ethereum adoption. Lastly, a controlling key that has been compromised can be replaced in a single transaction transfering all the asset held in the `Account2` account.
+
+`Economic Abstraction` the ability to pay an Ethereum transaction gas fee in any ERC20 token. Economic abstraction allows the user to pay for transaction in any ERC20 they hold in their `Account2`.
+
+`Account Linking` the ability to associate accounts heirachically with a single private key. Since the `owner` of an account can be a contract we set the owner to a root `Account2` and all requests will begin in the root `Account2` and will be forwarded to subordinate `Account2` accounts. Using singly linked design we can establish any level of heirarchy with minimum overhead for each hop.
+
+## Account Abstraction
+
+As described above `Account Abstraction` using `Account2` allows the user to link multiple wallets and reassign ownership to create the desired structure.
+
+![simple ownership diagram](./assets/ownership.drawio.png)
+
+A more complex example of how account heirarchical linking works in `Account2` can be seen in the following diagram
+
+![simple ownership diagram](./assets/complex_ownership.drawio.png)
+
+Using `Account2` each `Account2` can be called from the owner requiring only a single transactino from the root `Account2`. Each subsequent call is passed to the child from the `owner` where the `msg.sender` is the `owner` without the need to validate a signature. An example of the above described transaction can be seen in the following diagram.
+
+![simple ownership diagram](./assets/execution.drawio.png)
+
+## Economic Abstraction
+`Economic Abstraction` in our design the `Account2` owner can specify the value necessary for abstracted gas payment in the signed metatransaction using the following values:
+
+`gasToken` - an `address` for the desired ERC20 to make the transaction payment
+
+`gasTokenRatio` - a `uint256` wad `1e18` value that represent the ratio of `gas` to `gasToken` amount. For instance if the underlying `gasToken` is $AAVE the owner wants to pay 1 $AAVE per 1 gas they would use the following formula `1/1e18` (actual ratio math should account for precision)
+
+`gasLimit` - a `uint256` value that limits the amount of gas a relayer can spend when calling the transaction
+
+After the completion of a transaction using the `executeAsRelayer` method in the `Account2` contract the amount of gas used for the transaction is calculated using the following formula and transfered to the `tx.origin`.
+```
+uint256 amountToTransfer = (gasUsed + 21000) * gasTokenRatio;
+```
+
+## Limitations of the design
+Allowances and gas costs are the two main drawbacks to the current design. Allowances are instances where tokens owned by the `Account2` contract are not reset when a transfer occurs. This is only an issue in instances where the owner transfers ownership to another owner as part of a sale.
+
+Gas costs can be reduced through golfing of the contracts but still carry some overhead. An alternative might be to enshrine `Account2` in protocol to have effectively zero gas cost to initiate a transaction.
+
+---
 
 ## Getting Started
-
-Click [`use this template`](https://github.com/abigger87/femplate/generate) to create a new repository with this repo as the initial state.
-
-Or, if your repo already exists, run:
-```sh
-forge init --template https://github.com/abigger87/femplate
-git submodule update --init --recursive
-forge install
-```
-
-Run `./utils/rename.sh` to rename all instances of `femplate` with the name of your project/repository.
-
-## Blueprint
-
-```ml
-lib
-├─ forge-std — https://github.com/foundry-rs/forge-std
-├─ solmate — https://github.com/Rari-Capital/solmate
-scripts
-├─ Deploy.s.sol — Simple Deployment Script
-src
-├─ Greeter — A Minimal Greeter Contract
-test
-└─ Greeter.t — Exhaustive Tests
-```
-
-
-## Development
 
 **Setup**
 ```bash
