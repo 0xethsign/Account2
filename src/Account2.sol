@@ -15,17 +15,22 @@ contract Account2 is Owned {
     function executeAsRelay(
         address toCall,
         bytes calldata params,
-        uint256 nonce,
+        uint256 _nonce,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) external {
-        nonce++;
-        // validate signature
+        // validate nonce
+        require(nonce == _nonce, 'nonce too low');
+        // recover hash signature
         bytes32 hash = keccak256(abi.encodePacked(toCall, params, nonce));
+        // increment nonce
+        nonce++;
+        // recover signer
         address signer = ecrecover(hash, v, r, s);
+        // validate signer
         require(signer == owner && signer != address(0), "invalid signature");
-
+        // forward txn params
         (bool success, bytes memory data) = toCall.call(params);
     }
 
@@ -34,8 +39,8 @@ contract Account2 is Owned {
         bytes calldata params,
         uint256 gasTokenRatio,  // preferably >x, x = gas price in token
         address gasToken
-    ) internal {
-
+    ) public {
+        require(msg.sender == address(this));
         uint256 gasUsed = gasleft();
         (bool success, bytes memory data) = toCall.call(params);
         gasUsed -= gasleft() + 21000;
