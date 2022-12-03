@@ -4,16 +4,16 @@ pragma solidity ^0.8.15;
 import "forge-std/Test.sol";
 
 import {Greeter} from "src/Greeter.sol";
-import {EBonAB} from "src/EBonAB.sol";
+import {Account2} from "src/Account2.sol";
 
-contract EBonAbTest is Test {
+contract Account2Test is Test {
     using stdStorage for StdStorage;
 
     Greeter greeter;
-    EBonAB ea;
+    Account2 account2;
 
     function setUp() external {
-        ea = new EBonAB();
+        account2 = new Account2();
         greeter = new Greeter("gm");
     }
 
@@ -25,7 +25,7 @@ contract EBonAbTest is Test {
         bytes memory greet = abi.encode("gm");
         bytes4 select = bytes4(keccak256(abi.encodePacked("gm(string)")));
 
-        ea.executeAsOwner(address(greeter), bytes.concat(select, greet));
+        account2.executeAsOwner(address(greeter), bytes.concat(select, greet));
 
         // //slither-disable-next-line reentrancy-events,reentrancy-benign
         // greeter.setGreeting("gm gm");

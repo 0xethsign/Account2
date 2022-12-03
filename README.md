@@ -31,8 +31,6 @@ Using `Account2` each `Account2` can be called from the owner requiring only a s
 
 `gasTokenRatio` - a `uint256` wad `1e18` value that represent the ratio of `gas` to `gasToken` amount. For instance if the underlying `gasToken` is $AAVE the owner wants to pay 1 $AAVE per 1 gas they would use the following formula `1/1e18` (actual ratio math should account for precision)
 
-`gasLimit` - a `uint256` value that limits the amount of gas a relayer can spend when calling the transaction
-
 After the completion of a transaction using the `executeAsRelayer` method in the `Account2` contract the amount of gas used for the transaction is calculated using the following formula and transfered to the `tx.origin`.
 ```
 uint256 amountToTransfer = (gasUsed + 21000) * gasTokenRatio;
