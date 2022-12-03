@@ -9,18 +9,20 @@ interface IERC20 {
     function transfer(address to, uint256 amount) external returns (bool);
 }
 contract Account2 is Owned {
+    uint256 nonce = 0;
     constructor() Owned(msg.sender) {}
 
     function executeAsRelay(
         address toCall,
         bytes calldata params,
+        uint256 nonce,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) external {
-
+        nonce++;
         // validate signature
-        bytes32 hash = keccak256(abi.encodePacked(toCall, params));
+        bytes32 hash = keccak256(abi.encodePacked(toCall, params, nonce));
         address signer = ecrecover(hash, v, r, s);
         require(signer == owner && signer != address(0), "invalid signature");
 
@@ -48,7 +50,7 @@ contract Account2 is Owned {
         address toCall,
         bytes calldata params
     ) external onlyOwner {
-        
+
         (bool success, bytes memory data) = toCall.call(params);
     }
 }
