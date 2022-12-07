@@ -19,7 +19,7 @@ contract Account2 is Owned {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) external {
+    ) external returns (bool) {
         // validate nonce
         require(nonce == _nonce, 'nonce too low');
         // recover hash signature
@@ -31,7 +31,8 @@ contract Account2 is Owned {
         // validate signer
         require(signer == owner && signer != address(0), "invalid signature");
         // forward txn params
-        (bool success, bytes memory data) = toCall.call(params);
+        (bool success, ) = toCall.call(params);
+        return success;
     }
 
     function executeWithEconomicAbstraction(
@@ -39,23 +40,26 @@ contract Account2 is Owned {
         bytes calldata params,
         uint256 gasTokenRatio,  // preferably >x, x = gas price in token
         address gasToken
-    ) public {
+    ) public returns (bool) {
         require(msg.sender == address(this));
         uint256 gasUsed = gasleft();
-        (bool success, bytes memory data) = toCall.call(params);
+        (bool success, ) = toCall.call(params);
         gasUsed -= gasleft() + 21000;
 
         uint256 amount = (gasUsed * gasTokenRatio);
         uint256 balance = IERC20(gasToken).balanceOf(address(this));
         amount = amount > balance ? balance : amount;
         require(IERC20(gasToken).transfer(tx.origin, amount), 'gasToken balance too low');
+        return success;
     }
 
     function executeAsOwner(
         address toCall,
         bytes calldata params
-    ) external onlyOwner {
+    ) external onlyOwner returns (bool) {
 
-        (bool success, bytes memory data) = toCall.call(params);
+        (bool success, ) = toCall.call(params);
+
+        return success;
     }
 }
