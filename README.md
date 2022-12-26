@@ -124,7 +124,21 @@ For a full list of configuration options, see the Foundry [configuration documen
 - [forge-template](https://github.com/foundry-rs/forge-template)
 - [foundry-toolchain](https://github.com/foundry-rs/foundry-toolchain)
 
+## Contributing and Getting Help
 
-## Disclaimer
+If you want to contribute, or follow along with contributor discussion, you can use our [main telegram](https://t.me/+2ZuQp4t8i-U4MDI1) to chat with us about the development of Account2!
 
-_These smart contracts are being provided as is. No guarantee, representation or warranty is being made, express or implied, as to the safety or correctness of the user interface or the smart contracts. They have not been audited and as such there can be no assurance they will work as intended, and users may experience delays, failures, errors, omissions, loss of transmitted information or loss of funds. The creators are not liable for any of the foregoing. Users should proceed with caution and use at their own risk._
+
+If the answer is not there:
+-   Open a [discussion](https://github.com/smrpn/Account2/discussions/new) with your question, or
+-   Open an issue with [the bug](https://github.com/smrpn/Account2/issues/new)
+
+# 🚧 WARNING: UNDER CONSTRUCTION 🚧
+
+This project is work in progress and subject to frequent changes as we are still working on wiring up each individual node component into a full syncing pipeline.
+
+It has not been audited for security purposes and should not be used in production yet.
+
+We will be updating the documentation with the completion status of each component, as well as include more contributing guidelines (design docs, architecture diagrams, repository layouts) and "good first issues". See the "Contributing and Getting Help" section above for more.
+
+We appreciate your patience until we get there. Until then, we are happy to answer all questions in the Telegram link above.
